@@ -1,13 +1,12 @@
 # Churn Model Metrics
 
-## Resultados principales
+## Comparación de modelos
 
-| Métrica | Valor |
-|---|---:|
-| Accuracy | 1.0000 |
-| Precision | 1.0000 |
-| Recall | 1.0000 |
-| F1-score | 1.0000 |
+| Modelo | Accuracy | Precision | Recall | F1-score |
+|---|---:|---:|---:|---:|
+| Logistic Regression | 1.0000 | 1.0000 | 1.0000 | 1.0000 |
+| Random Forest | 1.0000 | 1.0000 | 1.0000 | 1.0000 |
+
 
 ## Interpretación inicial
 

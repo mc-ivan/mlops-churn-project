@@ -9,7 +9,10 @@ DATA_DIR = BASE_DIR / "data"
 MODELS_DIR = BASE_DIR / "models"
 DOCS_DIR = BASE_DIR / "docs"
 TEST_DATA = DATA_DIR / "test.csv"
-MODEL_FILE = MODELS_DIR / "churn_model.pkl"
+MODELS = {
+    "Logistic Regression": MODELS_DIR / "logistic_regression.pkl",
+    "Random Forest": MODELS_DIR / "random_forest.pkl"
+}
 METRICS_FILE = DOCS_DIR / "model_metrics.md"
 
 def evaluar_modelo():
@@ -22,9 +25,14 @@ def evaluar_modelo():
             "No se encontró data/test.csv. Primero ejecuta src/preprocess.py"
         )
 
-    if not MODEL_FILE.exists():
+    if not MODELS["Logistic Regression"].exists():
         raise FileNotFoundError(
-            "No se encontró el modelo entrenado. Primero ejecuta src/train_model.py"
+            "No se encontró el modelo Logistic Regression entrenado. Primero ejecuta src/train_model.py"
+        )
+    
+    if not MODELS["Random Forest"].exists():
+        raise FileNotFoundError(
+            "No se encontró el modelo Random Forest entrenado. Primero ejecuta src/train_model.py"
         )
 
     DOCS_DIR.mkdir(exist_ok=True)
@@ -34,27 +42,38 @@ def evaluar_modelo():
     X_test = df.drop(columns=["churn"])
     y_test = df["churn"]
 
-    modelo = joblib.load(MODEL_FILE)
+    resultados = []
+    for nombre, archivo_modelo in MODELS.items():
 
-    y_pred = modelo.predict(X_test)
+        modelo = joblib.load(archivo_modelo)
 
-    accuracy = accuracy_score(y_test, y_pred)
-    precision = precision_score(y_test, y_pred, zero_division=0)
-    recall = recall_score(y_test, y_pred, zero_division=0)
-    f1 = f1_score(y_test, y_pred, zero_division=0)
+        y_pred = modelo.predict(X_test)
 
-    contenido = f"""# Churn Model Metrics
+        resultados.append({
+            "modelo": nombre,
+            "accuracy": accuracy_score(y_test, y_pred),
+            "precision": precision_score(y_test, y_pred, zero_division=0),
+            "recall": recall_score(y_test, y_pred, zero_division=0),
+            "f1": f1_score(y_test, y_pred, zero_division=0)
+        })
 
-## Resultados principales
+    contenido = """# Churn Model Metrics
 
-| Métrica | Valor |
-|---|---:|
-| Accuracy | {accuracy:.4f} |
-| Precision | {precision:.4f} |
-| Recall | {recall:.4f} |
-| F1-score | {f1:.4f} |
+## Comparación de modelos
 
-## Interpretación inicial
+| Modelo | Accuracy | Precision | Recall | F1-score |
+|---|---:|---:|---:|---:|
+"""
+    for resultado in resultados:
+        contenido += (
+            f"| {resultado['modelo']} "
+            f"| {resultado['accuracy']:.4f} "
+            f"| {resultado['precision']:.4f} "
+            f"| {resultado['recall']:.4f} "
+            f"| {resultado['f1']:.4f} |\n"
+        )
+
+    contenido += f"""\n\n## Interpretación inicial
 
 Estas métricas permiten evaluar el desempeño inicial del modelo de clasificación.
 
@@ -66,7 +85,7 @@ Estas métricas permiten evaluar el desempeño inicial del modelo de clasificaci
 
     METRICS_FILE.write_text(contenido, encoding="utf-8")
 
-    print("Modelo evaluado correctamente.")
+    print("Modelos evaluados correctamente.")
     print(f"Métricas guardadas en: {METRICS_FILE}")
 
 if __name__ == "__main__":
