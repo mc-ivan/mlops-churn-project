@@ -2,7 +2,7 @@ from pathlib import Path
 
 import joblib
 import pandas as pd
-from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
+from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, confusion_matrix
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 DATA_DIR = BASE_DIR / "data"
@@ -49,12 +49,15 @@ def evaluar_modelo():
 
         y_pred = modelo.predict(X_test)
 
+        cm = confusion_matrix(y_test, y_pred)
+
         resultados.append({
             "modelo": nombre,
             "accuracy": accuracy_score(y_test, y_pred),
             "precision": precision_score(y_test, y_pred, zero_division=0),
             "recall": recall_score(y_test, y_pred, zero_division=0),
-            "f1": f1_score(y_test, y_pred, zero_division=0)
+            "f1": f1_score(y_test, y_pred, zero_division=0),
+            "confusion_matrix": cm
         })
 
     contenido = """# Churn Model Metrics
@@ -81,6 +84,22 @@ Estas métricas permiten evaluar el desempeño inicial del modelo de clasificaci
 - Precision indica qué tan confiables son las predicciones positivas.
 - Recall indica qué proporción de clientes con churn fueron identificados.
 - F1-score resume precision y recall en una sola métrica.
+"""
+    
+    contenido += "\n\n## Matrices de Confusión\n"
+
+    for resultado in resultados:
+
+        cm = resultado["confusion_matrix"]
+
+        contenido += f"""
+
+### {resultado['modelo']}
+
+| | Predicho 0 | Predicho 1 |
+|---|---:|---:|
+| Real 0 | {cm[0][0]} | {cm[0][1]} |
+| Real 1 | {cm[1][0]} | {cm[1][1]} |
 """
 
     METRICS_FILE.write_text(contenido, encoding="utf-8")

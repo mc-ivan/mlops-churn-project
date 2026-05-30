@@ -16,3 +16,22 @@ Estas métricas permiten evaluar el desempeño inicial del modelo de clasificaci
 - Precision indica qué tan confiables son las predicciones positivas.
 - Recall indica qué proporción de clientes con churn fueron identificados.
 - F1-score resume precision y recall en una sola métrica.
+
+
+## Matrices de Confusión
+
+
+### Logistic Regression
+
+| | Predicho 0 | Predicho 1 |
+|---|---:|---:|
+| Real 0 | 3 | 0 |
+| Real 1 | 0 | 2 |
+
+
+### Random Forest
+
+| | Predicho 0 | Predicho 1 |
+|---|---:|---:|
+| Real 0 | 3 | 0 |
+| Real 1 | 0 | 2 |
