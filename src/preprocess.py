@@ -35,6 +35,10 @@ def crear_dataset_demo():
         {"edad": 33, "antiguedad_meses": 14, "saldo_promedio": 2100, "reclamos": 2, "usa_app": 0, "churn": 1},
         {"edad": 41, "antiguedad_meses": 33, "saldo_promedio": 4600, "reclamos": 0, "usa_app": 1, "churn": 0},
         {"edad": 30, "antiguedad_meses": 9, "saldo_promedio": 1300, "reclamos": 3, "usa_app": 0, "churn": 1},
+        {"edad": 38, "antiguedad_meses": 18, "saldo_promedio": 2500, "reclamos": 2, "usa_app": 1, "churn": 1},
+        {"edad": 29, "antiguedad_meses": 15, "saldo_promedio": 2200, "reclamos": 1, "usa_app": 1, "churn": 0},
+        {"edad": 44, "antiguedad_meses": 22, "saldo_promedio": 3200, "reclamos": 2, "usa_app": 0, "churn": 1},
+        {"edad": 35, "antiguedad_meses": 20, "saldo_promedio": 3000, "reclamos": 2, "usa_app": 1, "churn": 0},
     ]
 
     df = pd.DataFrame(datos)
